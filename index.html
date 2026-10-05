@@ -50,28 +50,11 @@
   <div class="stage" id="stage"></div>
 </section>
 
+<script src="data.js"></script>
 <script>
-  const IMAGES = [
-    // 'IMG_01.JPG',
-    // 'IMG_02.JPG',
-    // 'IMG_03.JPG',
-    // 'IMG_04.JPG',
-    // 'IMG_05.JPG',
-    // 'IMG_06.JPG',
-    // 'IMG_07.JPG',
-    // 'IMG_08.JPG',
-    // 'IMG_09.JPG',
-    // 'IMG_10.JPG',
-    // 'IMG_11.JPG',
-    // 'IMG_12.JPG',
-    // 'IMG_13.JPG',
-  ];
-  const DETAIL = (i) => `#card-${i + 1}`;   // 例如改成 `detail/${i + 1}.html`
-
   /* ====== 弧形参数（想调形状就改这里）====== */
-  const COUNT = 13;      // 卡片数量
-  const STEP  = 8;       // 相邻卡片的角度差（度）：越大弧越弯
-  const FILL  = ['#cfe8dc','#4f7a3c','#b2a584','#3fae8f','#5fd06b','#b9b53a','#3a8f5a','#2f6a68','#a4e05a','#8a8a5a','#c9a23a','#6b7a5a','#c7a24a'];
+  const COUNT = ITEMS.length;  // 卡片数量（来自 data.js）
+  const STEP  = 5;             // 相邻卡片的角度差（度）：越大弧越弯
 
   const stage = document.getElementById('stage');
   const mid = (COUNT - 1) / 2;
@@ -80,9 +63,8 @@
   for (let i = 0; i < COUNT; i++) {
     const a = document.createElement('a');
     a.className = 'card';
-    a.href = DETAIL(i);
-    if (IMAGES[i]) a.style.backgroundImage = `url(${IMAGES[i]})`;
-    else a.style.backgroundColor = FILL[i % FILL.length];
+    a.href = `detail.html?id=${i}`;          // 点击后跳到详情页
+    a.style.backgroundColor = ITEMS[i].color;
     stage.appendChild(a);
     cards.push(a);
   }
