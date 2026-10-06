@@ -6,20 +6,19 @@
 <title>Game · A Dictionary Of Green</title>
 <link href="https://fonts.googleapis.com/css2?family=Aleo:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
+  :root { --w: min(71vw, 720px); }   /* 色块列的宽度，想调就改这里 */
   html, body { margin:0; background:#f4f4f4; font-family:'Aleo', Georgia, serif; }
 
-  /* 居中的一列色块（宽度想调就改这里） */
-  .col { width:min(71vw, 720px); margin:24px auto 0; container-type:inline-size; }
+  .col { width:var(--w); margin:24px auto 0; }
+  .block { position:relative; width:100%; height:calc(var(--w) * .625); }
 
-  .block { position:relative; width:100%; aspect-ratio:8/5; }
+  /* 色块上的黑色粗体小字：大小和边距都跟着列宽走 */
+  .msg { position:absolute; bottom:calc(var(--w) * .034); color:#000; font-weight:700; font-size:calc(var(--w) * .082); line-height:1; white-space:nowrap; }
+  .msg.left  { left:calc(var(--w) * .03); }
+  .msg.right { right:calc(var(--w) * .03); }
+  .msg.arrow { right:calc(var(--w) * .03); bottom:calc(var(--w) * .015); font-weight:300; font-size:calc(var(--w) * .15); }
 
-  /* 色块上的黑色粗体小字：字号跟着列宽走 */
-  .msg { position:absolute; bottom:3.4cqw; color:#000; font-weight:700; font-size:8.2cqw; line-height:1; white-space:nowrap; }
-  .msg.left  { left:3cqw; }
-  .msg.right { right:3cqw; }
-  .msg.arrow { right:3cqw; bottom:1.5cqw; font-weight:300; font-size:15cqw; }
-
-  /* 返回主页（设计稿里没有，不需要的话删掉这一行和下面 <a>） */
+  /* 返回主页（设计稿里没有，不需要就删掉这段和下面的 <a>） */
   .back { position:fixed; left:16px; top:14px; font-size:15px; font-weight:300; color:#000; opacity:.4; text-decoration:none; z-index:5; }
   .back:hover { opacity:1; }
 </style>
@@ -29,7 +28,10 @@
 <div class="col" id="col"></div>
 
 <script>
-  /* 前 11 块用你设计稿里的颜色，之后随机生成不同的绿色 */
+  /* 调试用：脚本出错时把原因显示在左上角，调好后可以删掉这一行 */
+  addEventListener('error', e => document.body.insertAdjacentHTML('afterbegin', '<pre style="position:fixed;top:40px;left:16px;color:#c00;z-index:9">' + e.message + '</pre>'));
+
+  /* 前 11 块用设计稿里的颜色，之后随机生成不同的绿色 */
   const SEED = ['#78FF50','#CCFF4F','#A8C956','#68C650','#72C487','#BDEED7','#A3AD8C','#82822A','#468A3A','#1F4A42','#5DA05A'];
 
   /* 哪一块上放什么字（序号从 0 开始） */
@@ -44,7 +46,7 @@
     const h = 70 + Math.random() * 95;    // 色相：黄绿 → 青绿
     const s = 25 + Math.random() * 75;    // 饱和度
     const l = 18 + Math.random() * 68;    // 明度：深到浅
-    return `hsl(${h | 0} ${s | 0}% ${l | 0}%)`;
+    return 'hsl(' + (h | 0) + ', ' + (s | 0) + '%, ' + (l | 0) + '%)';
   }
 
   const col = document.getElementById('col');
@@ -65,9 +67,10 @@
     }
   }
 
-  /* 快滑到底部时就继续生成，永远滑不完 */
+  /* 快滑到底部时就继续生成，永远滑不完（guard 防止出错时死循环） */
   function fill() {
-    while (document.documentElement.scrollHeight - scrollY - innerHeight < 1500) addBlocks(4);
+    let guard = 0;
+    while (guard++ < 40 && document.documentElement.scrollHeight - scrollY - innerHeight < 1500) addBlocks(4);
   }
   fill();
   addEventListener('scroll', fill, { passive:true });
