@@ -8,25 +8,16 @@
 <style>
   html, body { margin:0; height:100%; background:#000; font-family:'Aleo', Georgia, serif; overflow:hidden; }
   .page { display:flex; height:100vh; }
-
-  /* 左：照片（约 51%）  右：色块 */
   .photo { position:relative; flex:0 0 51.4%; background-size:cover; background-position:center; cursor:pointer; }
   .color { position:relative; flex:1; }
-
-  /* 色号：在照片的右下角，淡色大字 */
   .hex { position:absolute; right:1.8vw; bottom:1.5vh; font-weight:300; font-size:4.6vw; line-height:1; opacity:.55; pointer-events:none; }
-
   .back { position:absolute; right:24px; top:20px; font-weight:300; font-size:clamp(16px,1.7vw,22px); color:#fff; text-decoration:none; opacity:.6; }
   .back:hover { opacity:1; }
-
-  /* 地图弹窗：居中、无遮罩 */
   .overlay { position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10; }
   .overlay.open { display:flex; }
   .map { position:relative; width:42.5vw; min-width:300px; max-width:680px; aspect-ratio:605/498; background:#eee; box-shadow:0 8px 30px rgba(0,0,0,.18); }
   .map iframe { width:100%; height:100%; border:0; display:block; filter:saturate(.55) brightness(1.06); }
   .empty { height:100%; display:flex; align-items:center; justify-content:center; color:#777; font-weight:300; }
-
-  /* 照片图钉：左图的缩小版 */
   .pin { position:absolute; left:50%; top:50%; width:21.5%; aspect-ratio:1; box-sizing:border-box; transform:translate(-50%,-50%);
          border:5px solid #fff; border-radius:22px; background-size:cover; background-position:center;
          box-shadow:0 3px 12px rgba(0,0,0,.3); cursor:pointer; }
@@ -61,8 +52,6 @@
   const hex = document.getElementById('hex');
   hex.textContent = item.color.toUpperCase();
   hex.style.color = item.color;
-
-  /* 地图弹窗 */
   const overlay = document.getElementById('overlay');
   const map = document.getElementById('map');
   const pin = document.getElementById('pin');

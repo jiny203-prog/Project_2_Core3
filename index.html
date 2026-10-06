@@ -52,9 +52,8 @@
 
 <script src="data.js"></script>
 <script>
-  /* ====== 弧形参数（想调形状就改这里）====== */
-  const COUNT = ITEMS.length;  // 卡片数量（来自 data.js）
-  const STEP  = 5;             // 相邻卡片的角度差（度）：越大弧越弯
+  const COUNT = ITEMS.length; 
+  const STEP  = 5;            
 
   const stage = document.getElementById('stage');
   const mid = (COUNT - 1) / 2;
@@ -63,7 +62,7 @@
   for (let i = 0; i < COUNT; i++) {
     const a = document.createElement('a');
     a.className = 'card';
-    a.href = `detail.html?id=${i}`;          // 点击后跳到详情页
+    a.href = `detail.html?id=${i}`;         
     a.style.backgroundColor = ITEMS[i].color;
     stage.appendChild(a);
     cards.push(a);
@@ -71,8 +70,8 @@
 
   function layout() {
     const w = innerWidth;
-    const size = Math.max(110, Math.min(w * 0.2, 280));   // 卡片边长
-    const R = Math.max(w * 0.62, 360);                    // 弧半径
+    const size = Math.max(110, Math.min(w * 0.2, 280));   
+    const R = Math.max(w * 0.62, 360);                  
     cards.forEach((el, i) => {
       const t = i - mid;
       const th = t * STEP * Math.PI / 180;

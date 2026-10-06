@@ -7,15 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Aleo:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
   html, body { margin:0; background:#f4f4f4; font-family:'Aleo', Georgia, serif; }
-
-  /* 每个色块 = 一整屏 */
   .block { position:relative; width:100%; height:100vh; height:100svh; overflow:hidden; }
-
-  /* 提示语：黑色粗体，位置由脚本随机给出 */
   .msg { position:absolute; color:#000; font-weight:700; line-height:1; white-space:nowrap; font-size:clamp(20px, 2.4vw, 44px); }
   .msg.arrow { font-weight:300; font-size:clamp(40px, 5.5vw, 96px); }
-
-  /* 返回主页（设计稿里没有，不需要就删掉这段和下面的 <a>） */
   .back { position:fixed; left:16px; top:14px; font-size:15px; font-weight:300; color:#000; opacity:.4; text-decoration:none; z-index:5; }
   .back:hover { opacity:1; }
 </style>
@@ -25,21 +19,16 @@
 <div id="col"></div>
 
 <script>
-  /* 调试用：脚本出错时把原因显示在左上角，调好后可以删掉这一行 */
   addEventListener('error', e => document.body.insertAdjacentHTML('afterbegin', '<pre style="position:fixed;top:40px;left:16px;color:#c00;z-index:9">' + e.message + '</pre>'));
-
-  /* ====== 可以调的参数 ====== */
-  const HINT_CHANCE  = 0.6;    // 每个色块出现提示语的概率（0 ~ 1）
-  const AUTO_CONTRAST = true;  // 深色块上自动改成白字；想一直用黑字就改成 false
+  const HINT_CHANCE  = 0.6;    
+  const AUTO_CONTRAST = true; 
   const HINTS = ['Not yet.', 'Keep going.', 'Don’t stop.', 'Scroll down.', 'Almost there.', '↓'];
-
-  /* 前 11 块用设计稿里的颜色，之后随机生成不同的绿色 */
   const SEED = ['#78FF50','#CCFF4F','#A8C956','#68C650','#72C487','#BDEED7','#A3AD8C','#82822A','#468A3A','#1F4A42','#5DA05A'];
 
   const rand = (a, b) => a + Math.random() * (b - a);
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
-  function lum(hex) {   // 算颜色亮不亮，用来决定字是黑还是白
+  function lum(hex) {   
     const v = [1, 3, 5].map(i => parseInt(hex.substr(i, 2), 16) / 255);
     return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
   }
@@ -59,8 +48,6 @@
       const b = document.createElement('div');
       b.className = 'block';
       b.style.background = c.css;
-
-      /* 第一块固定放一个向下的箭头；之后的色块按概率随机放提示语 */
       let hint = null;
       if (n === 0) hint = { text: '↓', x: 90, y: 78 };
       else if (Math.random() < HINT_CHANCE) hint = { text: pick(HINTS), x: rand(4, 66), y: rand(8, 86) };
@@ -78,7 +65,6 @@
     }
   }
 
-  /* 快滑到底部时继续生成，永远滑不完（guard 防止出错时死循环） */
   function fill() {
     let guard = 0;
     while (guard++ < 40 && document.documentElement.scrollHeight - scrollY - innerHeight < 1500) addBlocks(2);
