@@ -4,86 +4,150 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A Dictionary Of Green</title>
-<link href="https://fonts.googleapis.com/css2?family=Aleo:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rock+3D&family=Schoolbell&display=swap" rel="stylesheet">
 <style>
-  :root { --green:#6cff3f; --bg:#000; }
+  :root { --ink:#111; --cw:clamp(110px, 11vw, 190px); }
   * { box-sizing:border-box; }
-  html, body { margin:0; height:100%; background:var(--bg); }
-  body { font-family:'Aleo', Georgia, serif; color:#fff; overflow:hidden; }
+  html, body { margin:0; height:100%; background:#F5F1E8; color:var(--ink); overflow:hidden; }
 
-  .hero { position:relative; width:100%; height:100vh; overflow:hidden; }
+  .rock   { font-family:"Rock 3D", system-ui; font-weight:400; font-style:normal; }
+  .school { font-family:"Schoolbell", cursive; font-weight:400; font-style:normal; }
 
-  nav { position:absolute; top:20px; right:24px; display:flex; gap:12vw; font-weight:300; font-size:clamp(16px,1.7vw,24px); }
-  nav a { color:#ddd; text-decoration:none; transition:color .2s; }
-  nav a:hover { color:var(--green); }
+  /* 背景涂鸦层 */
+  .doodles { position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+  .doodles use { fill:none; stroke:currentColor; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; filter:url(#crayon); }
 
-  .title { position:absolute; left:2vw; top:12vh; margin:0; line-height:1; }
-  .title .small { display:block; font-weight:300; font-size:clamp(32px,4.4vw,64px); }
-  .title .big { display:block; font-weight:700; color:var(--green); font-size:clamp(48px,6.4vw,92px); letter-spacing:.01em; margin-top:.05em; }
+  .page { position:relative; z-index:1; height:100vh; display:flex; flex-direction:column; }
 
-  .hint { position:absolute; right:1vw; top:30vh; margin:0; color:var(--green); font-weight:300; font-size:clamp(15px,1.6vw,22px); }
+  header { display:flex; justify-content:space-between; align-items:center; padding:5vh 6vw 0; }
+  .brand { color:var(--ink); text-decoration:none; font-size:clamp(20px, 2.2vw, 32px); }
+  nav { display:flex; gap:3vw; font-size:clamp(17px, 1.6vw, 24px); }
+  nav a { color:var(--ink); text-decoration:none; transition:color .2s; }
+  nav a:hover { color:#1f7a4d; }
 
-  .stage { position:absolute; left:50%; top:62vh; width:0; height:0; }
+  h1 { margin:9vh 6vw 0; font-size:clamp(36px, 6vw, 92px); line-height:1.05; }
+
+  /* 可拖动的一排卡片 */
+  .track { position:relative; display:flex; align-items:flex-start; margin-top:3vh; padding:5vh 6vw; overflow-x:auto; scrollbar-width:none; cursor:grab; }
+  .track::-webkit-scrollbar { display:none; }
+  .track.grabbing { cursor:grabbing; }
+
   .card {
-    position:absolute; left:0; top:0;
-    width:var(--size); height:var(--size);
-    margin:calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
-    background-size:cover; background-position:center;
-    transform:translate(var(--x), var(--y)) rotate(var(--r)) scale(var(--s, 1));
-    transition:transform .45s cubic-bezier(.2,.8,.2,1);
-    cursor:pointer; will-change:transform;
-    z-index:var(--z);
+    position:relative; flex:0 0 var(--cw); height:calc(var(--cw) * 2.1); margin-right:calc(var(--cw) * -.06);
+    padding:14px 16px; font-family:"Schoolbell", cursive; font-size:20px; text-decoration:none;
+    box-shadow:0 6px 14px rgba(0,0,0,.12); user-select:none; -webkit-user-drag:none;
+    transform:translateY(var(--y)) rotate(var(--r)); transition:transform .35s cubic-bezier(.2,.8,.2,1);
   }
-  .card:hover { --s:1.45; z-index:999; }
+  .card:hover  { transform:translateY(calc(var(--y) - 1.5vh)) rotate(var(--r)); z-index:4; }
+  .card.active { transform:translateY(-3vh) rotate(var(--r)); z-index:5; }
+
+  footer { margin-top:auto; padding:0 6vw 5vh; display:flex; justify-content:flex-end; align-items:center; font-size:clamp(16px, 1.5vw, 22px); }
+  .arrows button { background:none; border:0; font:200 clamp(28px, 3vw, 44px) system-ui; color:var(--ink); cursor:pointer; padding:0 .4em; }
+  .arrows button:hover { color:#1f7a4d; }
 </style>
 </head>
 <body>
-<section class="hero">
-  <nav><a href="game.html">Game</a><a href="concept.html">About</a></nav>
 
-  <h1 class="title">
-    <span class="small">A Dictionary Of</span>
-    <span class="big">GREEN</span>
-  </h1>
-  <p class="hint">Pick one you interested in</p>
+<!-- 蜡笔涂鸦：简笔画 + 粗糙的蜡笔质感滤镜（颜色、位置、旋转都可以改） -->
+<svg class="doodles" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <defs>
+    <filter id="crayon">
+      <feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="4" result="w"/>
+      <feDisplacementMap in="SourceGraphic" in2="w" scale="5" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="9" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.7" result="m"/>
+      <feComposite in="d" in2="m" operator="in"/>
+    </filter>
+    <symbol id="leaf"     viewBox="0 0 100 100"><path d="M18 82C8 42 38 10 86 14C92 62 60 92 18 82ZM18 82L72 28M34 66L56 42M46 76L74 52M30 50L46 34"/></symbol>
+    <symbol id="can"      viewBox="0 0 100 100"><path d="M22 26H78M40 26V16H60V26M28 26L34 88H66L72 26M44 40V74M56 40V74M36 54H64"/></symbol>
+    <symbol id="cap"      viewBox="0 0 100 100"><path d="M50 12L60 20L72 16L76 28L88 32L82 44L90 54L80 62L82 74L70 74L64 86L52 80L40 86L34 74L22 74L24 62L12 54L20 44L14 32L26 28L30 16L42 20ZM50 36A14 14 0 1 0 50.1 36"/></symbol>
+    <symbol id="bottle"   viewBox="0 0 100 100"><path d="M42 8H58V22C72 30 74 42 74 52V90H26V52C26 42 28 30 42 22ZM42 22H58M26 58H74M26 76H74"/></symbol>
+    <symbol id="tree"     viewBox="0 0 100 100"><path d="M50 92V58M50 58C16 58 14 20 50 12C86 20 84 58 50 58ZM50 74L36 62M50 70L64 58"/></symbol>
+    <symbol id="grass"    viewBox="0 0 100 100"><path d="M16 90L26 38M32 90L44 22M50 90V34M66 90L58 18M84 90L72 44"/></symbol>
+    <symbol id="apple"    viewBox="0 0 100 100"><path d="M50 32C18 20 6 56 24 78C34 92 44 86 50 86C56 86 66 92 76 78C94 56 82 20 50 32ZM50 32C50 20 56 12 64 8M56 18C66 8 78 12 78 12C74 22 62 24 56 18"/></symbol>
+    <symbol id="cup"      viewBox="0 0 100 100"><path d="M24 30L32 90H68L76 30ZM18 30H82M54 30L62 10H74M30 52H70"/></symbol>
+    <symbol id="lime"     viewBox="0 0 100 100"><path d="M50 8A42 42 0 1 0 50.1 8M50 50V12M50 50L84 30M50 50L84 70M50 50V88M50 50L16 70M50 50L16 30"/></symbol>
+    <symbol id="scribble" viewBox="0 0 100 100"><path d="M10 22L90 28L12 40L88 46L14 58L86 64L16 76L84 82"/></symbol>
+  </defs>
 
-  <div class="stage" id="stage"></div>
-</section>
+  <!-- 上方（标题右侧的空白处） -->
+  <use href="#scribble" x="520"  y="90"  width="150" height="150" transform="rotate(-6 595 165)"  style="color:#00a86b"/>
+  <use href="#cap"      x="740"  y="170" width="100" height="100" transform="rotate(14 790 220)"  style="color:#7bc043"/>
+  <use href="#leaf"     x="860"  y="70"  width="120" height="120" transform="rotate(-18 920 130)" style="color:#2fa84f"/>
+  <use href="#can"      x="1060" y="120" width="140" height="140" transform="rotate(8 1130 190)"  style="color:#1f7a4d"/>
+  <use href="#tree"     x="1250" y="100" width="130" height="130" transform="rotate(-8 1315 165)" style="color:#4caf50"/>
+  <!-- 下方（卡片下面的空白处） -->
+  <use href="#bottle"   x="420"  y="770" width="110" height="110" transform="rotate(-14 475 825)" style="color:#0fb58a"/>
+  <use href="#lime"     x="620"  y="780" width="100" height="100" transform="rotate(10 670 830)"  style="color:#9ad14b"/>
+  <use href="#grass"    x="820"  y="775" width="110" height="110" transform="rotate(-6 875 830)"  style="color:#5a8f29"/>
+  <use href="#apple"    x="1000" y="770" width="105" height="105" transform="rotate(12 1052 822)" style="color:#2fa84f"/>
+  <use href="#cup"      x="1150" y="790" width="95"  height="95"  transform="rotate(-10 1197 837)" style="color:#00a86b"/>
+</svg>
+
+<div class="page">
+  <header>
+    <a class="brand rock" href="index.html">A Dictionary of Green</a>
+    <nav class="school"><a href="game.html">Game</a><a href="concept.html">Concept</a></nav>
+  </header>
+
+  <h1 class="rock">Pick one you interested in</h1>
+
+  <div class="track" id="track"></div>
+
+  <footer class="school">
+    <div class="arrows"><button id="prev" aria-label="Previous">←</button><button id="next" aria-label="Next">→</button></div>
+  </footer>
+</div>
 
 <script src="data.js"></script>
 <script>
-  const COUNT = ITEMS.length; 
-  const STEP  = 5;            
+  /* 调试用：脚本出错时把原因显示在左上角，调好后可以删掉这一行 */
+  addEventListener('error', e => document.body.insertAdjacentHTML('afterbegin', '<pre style="position:fixed;top:8px;left:8px;color:#c00;z-index:9">' + e.message + '</pre>'));
 
-  const stage = document.getElementById('stage');
-  const mid = (COUNT - 1) / 2;
-  const cards = [];
+  const track = document.getElementById('track');
+  const lum  = hex => { const v = [1,3,5].map(i => parseInt(hex.substr(i, 2), 16) / 255); return .2126*v[0] + .7152*v[1] + .0722*v[2]; };
+  const rnd  = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };   // 固定的"随机"，每次刷新一样
 
-  for (let i = 0; i < COUNT; i++) {
+  /* 每条数据做一张卡片：颜色来自 data.js，轻微的旋转和高低错位 */
+  const cards = ITEMS.map((it, i) => {
     const a = document.createElement('a');
     a.className = 'card';
-    a.href = `detail.html?id=${i}`;         
-    a.style.backgroundColor = ITEMS[i].color;
-    stage.appendChild(a);
-    cards.push(a);
-  }
+    a.href = 'detail.html?id=' + i;
+    a.draggable = false;
+    a.style.background = it.color;
+    a.style.color = lum(it.color) < .45 ? '#fff' : '#111';
+    a.style.setProperty('--r', ((rnd(i) - .5) * 3).toFixed(2) + 'deg');
+    a.style.setProperty('--y', (rnd(i + 50) * 14).toFixed(0) + 'px');
+    a.textContent = String(i + 1).padStart(2, '0');
+    track.appendChild(a);
+    return a;
+  });
 
-  function layout() {
-    const w = innerWidth;
-    const size = Math.max(110, Math.min(w * 0.2, 280));   
-    const R = Math.max(w * 0.62, 360);                  
-    cards.forEach((el, i) => {
-      const t = i - mid;
-      const th = t * STEP * Math.PI / 180;
-      el.style.setProperty('--size', size + 'px');
-      el.style.setProperty('--x', (R * Math.sin(th)).toFixed(1) + 'px');
-      el.style.setProperty('--y', (R * (1 - Math.cos(th))).toFixed(1) + 'px');
-      el.style.setProperty('--r', (t * STEP).toFixed(1) + 'deg');
-      el.style.setProperty('--z', 100 - Math.round(Math.abs(t) * 3));
-    });
+  /* 离中间最近的那张卡片抬起来 */
+  function mark() {
+    const mid = track.scrollLeft + track.clientWidth / 2;
+    let best = null, bd = Infinity;
+    cards.forEach(c => { const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (d < bd) { bd = d; best = c; } });
+    cards.forEach(c => c.classList.toggle('active', c === best));
   }
-  layout();
-  addEventListener('resize', layout);
+  track.addEventListener('scroll', mark, { passive:true });
+  addEventListener('resize', mark);
+
+  /* 鼠标拖动（触屏直接用手指滑动） */
+  let down = false, moved = false, sx = 0, sl = 0;
+  track.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; down = true; moved = false; sx = e.clientX; sl = track.scrollLeft; track.classList.add('grabbing'); });
+  addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - sx; if (Math.abs(dx) > 5) moved = true; track.scrollLeft = sl - dx; });
+  addEventListener('pointerup', () => { down = false; track.classList.remove('grabbing'); });
+  track.addEventListener('click', e => { if (moved) { e.preventDefault(); moved = false; } }, true);   // 拖动时不触发跳转
+
+  /* 左右箭头 */
+  document.getElementById('prev').onclick = () => track.scrollBy({ left: -track.clientWidth * .5, behavior:'smooth' });
+  document.getElementById('next').onclick = () => track.scrollBy({ left:  track.clientWidth * .5, behavior:'smooth' });
+
+  /* 一开始让第 6 张在正中间 */
+  const c0 = cards[5] || cards[0];
+  track.scrollLeft = c0.offsetLeft - (track.clientWidth - c0.offsetWidth) / 2;
+  mark();
 </script>
 </body>
 </html>
