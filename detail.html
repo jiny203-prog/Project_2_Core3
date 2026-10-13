@@ -4,28 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A Dictionary Of Green</title>
-<link href="https://fonts.googleapis.com/css2?family=Aleo:wght@300;400;700&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Aleo:wght@300;400;700&family=Schoolbell&display=swap" rel="stylesheet">
 <style>
-  html, body { margin:0; height:100%; background:#000; font-family:'Aleo', Georgia, serif; overflow:hidden; }
+  html, body { margin:0; height:100%; background:#000; font-family:"Schoolbell", cursive; font-weight:400; font-style:normal; overflow:hidden; }
   .page { display:flex; height:100vh; }
   .photo { position:relative; flex:0 0 51.4%; background-size:cover; background-position:center; cursor:pointer; }
   .color { position:relative; flex:1; }
-  .hex { position:absolute; right:1.8vw; bottom:1.5vh; font-weight:300; font-size:4.6vw; line-height:1; opacity:.55; pointer-events:none; }
-  .back { position:absolute; right:24px; top:20px; font-weight:300; font-size:clamp(16px,1.7vw,22px); color:#fff; text-decoration:none; opacity:.6; }
+  .hex { position:absolute; right:1.8vw; bottom:1.5vh; font-family:"Schoolbell", cursive; font-size:5vw; line-height:1; color:#000; pointer-events:none; }
+  .back { position:absolute; right:24px; top:20px; font-family:"Schoolbell", cursive; font-weight:400; font-size:clamp(18px,1.9vw,26px); color:#fff; text-decoration:none; opacity:.6; }
   .back:hover { opacity:1; }
   .overlay { position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10; }
   .overlay.open { display:flex; }
   .map { position:relative; width:42.5vw; min-width:300px; max-width:680px; aspect-ratio:605/498; background:#eee; box-shadow:0 8px 30px rgba(0,0,0,.18); }
   .map iframe { width:100%; height:100%; border:0; display:block; filter:saturate(.55) brightness(1.06); }
-  .empty { height:100%; display:flex; align-items:center; justify-content:center; color:#777; font-weight:300; }
+  .empty { height:100%; display:flex; align-items:center; justify-content:center; color:#777; font-size:20px; }
   .pin { position:absolute; left:50%; top:50%; width:21.5%; aspect-ratio:1; box-sizing:border-box; transform:translate(-50%,-50%);
          border:5px solid #fff; border-radius:22px; background-size:cover; background-position:center;
          box-shadow:0 3px 12px rgba(0,0,0,.3); cursor:pointer; }
   .pin::after { content:''; position:absolute; left:50%; bottom:-14px; margin-left:-9px;
                 border:9px solid transparent; border-top:10px solid #fff; border-bottom:0; }
 
-  .cap { position:absolute; left:0; top:calc(100% + 10px); color:#fff; font-size:14px; font-weight:300; text-shadow:0 1px 3px rgba(0,0,0,.5); }
-  .cap a { color:#fff; font-weight:700; margin-left:8px; text-decoration:none; }
+  .cap { position:absolute; left:0; top:calc(100% + 10px); color:#fff; font-size:18px; text-shadow:0 1px 3px rgba(0,0,0,.5); }
+  .cap a { color:#fff; margin-left:8px; text-decoration:none; border-bottom:1px solid #fff; }
 </style>
 </head>
 <body>
@@ -51,7 +51,6 @@
   document.getElementById('color').style.backgroundColor = item.color;
   const hex = document.getElementById('hex');
   hex.textContent = item.color.toUpperCase();
-  hex.style.color = item.color;
   const overlay = document.getElementById('overlay');
   const map = document.getElementById('map');
   const pin = document.getElementById('pin');
