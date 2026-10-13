@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
 <title>A Dictionary Of Green</title>
 <link href="https://fonts.googleapis.com/css2?family=Rock+3D&family=Schoolbell&display=swap" rel="stylesheet">
 <style>
@@ -12,7 +13,8 @@
 
   .rock   { font-family:"Rock 3D", system-ui; font-weight:400; font-style:normal; }
   .school { font-family:"Schoolbell", cursive; font-weight:400; font-style:normal; }
-  .page { position:relative; z-index:1; height:100vh; display:flex; flex-direction:column; }
+
+  .page { position:relative; height:100vh; display:flex; flex-direction:column; }
 
   header { display:flex; justify-content:space-between; align-items:center; padding:5vh 6vw 0; }
   .brand { color:var(--ink); text-decoration:none; font-size:clamp(20px, 2.2vw, 32px); }
@@ -42,42 +44,6 @@
 </style>
 </head>
 <body>
-
-<!-- 蜡笔涂鸦：简笔画 + 粗糙的蜡笔质感滤镜（颜色、位置、旋转都可以改） -->
-<svg class="doodles" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-  <defs>
-    <filter id="crayon">
-      <feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="4" result="w"/>
-      <feDisplacementMap in="SourceGraphic" in2="w" scale="5" result="d"/>
-      <feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="9" result="g"/>
-      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.7" result="m"/>
-      <feComposite in="d" in2="m" operator="in"/>
-    </filter>
-    <symbol id="leaf"     viewBox="0 0 100 100"><path d="M18 82C8 42 38 10 86 14C92 62 60 92 18 82ZM18 82L72 28M34 66L56 42M46 76L74 52M30 50L46 34"/></symbol>
-    <symbol id="can"      viewBox="0 0 100 100"><path d="M22 26H78M40 26V16H60V26M28 26L34 88H66L72 26M44 40V74M56 40V74M36 54H64"/></symbol>
-    <symbol id="cap"      viewBox="0 0 100 100"><path d="M50 12L60 20L72 16L76 28L88 32L82 44L90 54L80 62L82 74L70 74L64 86L52 80L40 86L34 74L22 74L24 62L12 54L20 44L14 32L26 28L30 16L42 20ZM50 36A14 14 0 1 0 50.1 36"/></symbol>
-    <symbol id="bottle"   viewBox="0 0 100 100"><path d="M42 8H58V22C72 30 74 42 74 52V90H26V52C26 42 28 30 42 22ZM42 22H58M26 58H74M26 76H74"/></symbol>
-    <symbol id="tree"     viewBox="0 0 100 100"><path d="M50 92V58M50 58C16 58 14 20 50 12C86 20 84 58 50 58ZM50 74L36 62M50 70L64 58"/></symbol>
-    <symbol id="grass"    viewBox="0 0 100 100"><path d="M16 90L26 38M32 90L44 22M50 90V34M66 90L58 18M84 90L72 44"/></symbol>
-    <symbol id="apple"    viewBox="0 0 100 100"><path d="M50 32C18 20 6 56 24 78C34 92 44 86 50 86C56 86 66 92 76 78C94 56 82 20 50 32ZM50 32C50 20 56 12 64 8M56 18C66 8 78 12 78 12C74 22 62 24 56 18"/></symbol>
-    <symbol id="cup"      viewBox="0 0 100 100"><path d="M24 30L32 90H68L76 30ZM18 30H82M54 30L62 10H74M30 52H70"/></symbol>
-    <symbol id="lime"     viewBox="0 0 100 100"><path d="M50 8A42 42 0 1 0 50.1 8M50 50V12M50 50L84 30M50 50L84 70M50 50V88M50 50L16 70M50 50L16 30"/></symbol>
-    <symbol id="scribble" viewBox="0 0 100 100"><path d="M10 22L90 28L12 40L88 46L14 58L86 64L16 76L84 82"/></symbol>
-  </defs>
-
-  <!-- 上方（标题右侧的空白处） -->
-  <use href="#scribble" x="520"  y="90"  width="150" height="150" transform="rotate(-6 595 165)"  style="color:#00a86b"/>
-  <use href="#cap"      x="740"  y="170" width="100" height="100" transform="rotate(14 790 220)"  style="color:#7bc043"/>
-  <use href="#leaf"     x="860"  y="70"  width="120" height="120" transform="rotate(-18 920 130)" style="color:#2fa84f"/>
-  <use href="#can"      x="1060" y="120" width="140" height="140" transform="rotate(8 1130 190)"  style="color:#1f7a4d"/>
-  <use href="#tree"     x="1250" y="100" width="130" height="130" transform="rotate(-8 1315 165)" style="color:#4caf50"/>
-  <!-- 下方（卡片下面的空白处） -->
-  <use href="#bottle"   x="420"  y="770" width="110" height="110" transform="rotate(-14 475 825)" style="color:#0fb58a"/>
-  <use href="#lime"     x="620"  y="780" width="100" height="100" transform="rotate(10 670 830)"  style="color:#9ad14b"/>
-  <use href="#grass"    x="820"  y="775" width="110" height="110" transform="rotate(-6 875 830)"  style="color:#5a8f29"/>
-  <use href="#apple"    x="1000" y="770" width="105" height="105" transform="rotate(12 1052 822)" style="color:#2fa84f"/>
-  <use href="#cup"      x="1150" y="790" width="95"  height="95"  transform="rotate(-10 1197 837)" style="color:#00a86b"/>
-</svg>
 
 <div class="page">
   <header>

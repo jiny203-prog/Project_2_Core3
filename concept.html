@@ -11,9 +11,6 @@
   html, body { margin:0; background:#F5F1E8; color:var(--ink); font-family:"Schoolbell", cursive; font-weight:400; font-style:normal; }
 
   .rock { font-family:"Rock 3D", system-ui; font-weight:400; font-style:normal; }
-  .doodles { position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
-  .doodles use { fill:none; stroke:currentColor; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; filter:url(#crayon); }
-
   header { position:absolute; top:0; left:0; right:0; z-index:2; display:flex; justify-content:space-between; align-items:center; padding:5vh 6vw 0; }
   .brand { color:var(--ink); text-decoration:none; font-size:clamp(20px, 2.2vw, 32px); }
   nav { display:flex; gap:3vw; font-size:clamp(17px, 1.6vw, 24px); }
@@ -35,6 +32,7 @@
   .submit { margin:0; font-size:clamp(20px, 2.1vw, 30px); line-height:1.4; }
   .submit a { color:var(--g); text-decoration:none; border-bottom:2px solid var(--g); }
 </style>
+<link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
 <header>
@@ -46,20 +44,19 @@
   <h1 id="big" class="rock">GREEN</h1>
 </section>
 
+ <section class="content">
   <h2>Interested in this topic? Start here:</h2>
   <ul>
     <li><a href="https://doi.org/10.1016/j.tics.2015.08.008" target="_blank" rel="noopener">Clarke, Alex, and Lorraine K. Tyler. “Understanding What We See: How We Derive Meaning From Vision.” Trends in Cognitive Sciences 19, no. 11 (2015)</a></li>
     <li><a href="https://yalebooks.yale.edu/2023/02/13/interaction-of-color-60-years-on/" target="_blank" rel="noopener">Danilowitz, Brenda, and Amy Jean Porter. “Interaction of Color—60 Years On.” Yale University Press Blog, February 13, 2023.</a></li>
-    <li><a href="https://people.csail.mit.edu/lavanya/PDF/landy07_news_and_views.pdf?" target="_blank" rel="noopener">Landy, Michael S. “Visual Perception: Estimation of Surface Gloss.” Nature 447, no. 7141 (2007): 158–159.</a></li>
-    <li><a href="https://en.wikisource.org/wiki/Leaves_of_Grass_(1855)/I_celebrate_myself?" target="_blank" rel="noopener">Whitman, Walt. “Song of Myself.” In Leaves of Grass. 1855.
-1855 Leaves of Grass facsimile</a></li>
-
-</ul>
+    <li><a href="https://people.csail.mit.edu/lavanya/PDF/landy07_news_and_views.pdf" target="_blank" rel="noopener">Landy, Michael S. “Visual Perception: Estimation of Surface Gloss.” Nature 447, no. 7141 (2007): 158–159.</a></li>
+    <li><a href="https://en.wikisource.org/wiki/Leaves_of_Grass_(1855)/I_celebrate_myself" target="_blank" rel="noopener">Whitman, Walt. “Song of Myself.” In Leaves of Grass. 1855.</a></li>
+  </ul>
 
   <h2>Send us your green</h2>
   <p class="submit">
     Found a green in your own life? We’d love to add it to the dictionary — send a photo and where you took it to
-    <a href="mailto:your-email@example.com?subject=My%20green">jiny203@newschool.edu</a>.
+    <a href="mailto:jiny203@newschool.edu?subject=My%20green">jiny203@newschool.edu</a>.
   </p>
 </section>
 
@@ -73,7 +70,7 @@
   }
   fit();
   addEventListener('resize', fit);
-  if (document.fonts) document.fonts.ready.then(fit);  
+  if (document.fonts) document.fonts.ready.then(fit);   
 </script>
 </body>
 </html>
