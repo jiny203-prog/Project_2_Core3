@@ -8,22 +8,36 @@
 <style>
   :root { --ink:#111; --g:#1f7a4d; }
   * { box-sizing:border-box; }
-  html, body { margin:0; background:#F5F1E8; color:var(--ink); font-family:"Sarala", sans-serif; font-weight:400; font-style:normal; }
+  html, body { margin:0; height:100%; background:#F5F1E8; color:var(--ink); font-family:"Sarala", sans-serif; font-weight:400; font-style:normal; overflow:hidden; }
 
-  header { display:flex; justify-content:flex-end; align-items:center; padding:5vh 6vw 0; }
-  nav { display:flex; gap:3vw; font-size:clamp(17px, 1.6vw, 24px); }
+  header { position:fixed; top:0; left:0; right:0; z-index:5; display:flex; justify-content:flex-end; padding:5vh 6vw 0; pointer-events:none; }
+  nav { display:flex; gap:3vw; font-size:clamp(17px, 1.6vw, 24px); pointer-events:auto; }
   nav a { color:var(--ink); text-decoration:none; transition:color .2s; }
   nav a:hover { color:var(--g); }
 
-  .content { max-width:960px; padding:8vh 6vw 14vh; }
-  h2 { margin:0 0 .9em; font-weight:400; font-size:clamp(18px, 1.8vw, 26px); color:var(--g); }
-  ul { list-style:none; margin:0 0 9vh; padding:0; }
-  li { margin-bottom:.7em; }
-  li a { color:var(--ink); font-size:clamp(20px, 2.1vw, 30px); text-decoration:none; border-bottom:2px solid var(--ink); transition:color .2s, border-color .2s; }
-  li a::after { content:' ↗'; }
-  li a:hover { color:var(--g); border-color:var(--g); }
-  .submit { margin:0; font-size:clamp(20px, 2.1vw, 30px); line-height:1.4; }
-  .submit a { color:var(--g); text-decoration:none; border-bottom:2px solid var(--g); }
+  /* 每一页占满一屏，上下切换 */
+  main { height:100vh; height:100svh; overflow-y:auto; scroll-snap-type:y mandatory; scroll-behavior:smooth; scrollbar-width:none; outline:none; }
+  main::-webkit-scrollbar { display:none; }
+  .page { position:relative; height:100vh; height:100svh; scroll-snap-align:start; scroll-snap-stop:always; display:flex; flex-direction:column; justify-content:center; padding:14vh 13vw 12vh 6vw; }
+
+  .say { margin:0; max-width:19em; font-size:clamp(30px, 5vw, 80px); line-height:1.08; letter-spacing:-.01em; }
+  .say sup { font-size:.22em; letter-spacing:0; vertical-align:super; margin-left:.3em; color:var(--g); }
+
+  /* 最下方：页码 + link */
+  .foot { position:absolute; left:6vw; right:6vw; bottom:4.5vh; display:flex; gap:3vw; align-items:baseline; font-size:clamp(13px, 1.05vw, 16px); line-height:1.4; }
+  .foot .n { flex:0 0 auto; color:var(--g); font-variant-numeric:tabular-nums; }
+  .foot a { color:var(--ink); text-decoration:none; border-bottom:1px solid transparent; transition:color .2s, border-color .2s; }
+  .foot a:hover { color:var(--g); border-color:var(--g); }
+
+  /* 上下箭头 */
+  .arrows { position:fixed; right:6vw; top:50%; transform:translateY(-50%); z-index:5; display:flex; flex-direction:column; gap:1.2vh; }
+  .arrows button { background:none; border:0; padding:.1em .4em; font:400 clamp(30px, 3vw, 46px) "Sarala", sans-serif; color:var(--ink); cursor:pointer; transition:color .2s, opacity .2s; }
+  .arrows button:hover:not(:disabled) { color:var(--g); }
+  .arrows button:disabled { opacity:.2; cursor:default; }
+  .arrows button:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+
+  @media (prefers-reduced-motion: reduce) { main { scroll-behavior:auto; } }
+  @media (max-width:640px) { .arrows { right:3vw; } .say { max-width:none; } }
 </style>
 <link rel="icon" type="image/png" href="favicon.png">
 </head>
@@ -31,20 +45,64 @@
 <header>
   <nav><a href="index.html">Home</a><a href="concept.html">Concept</a><a href="game.html">Game</a></nav>
 </header>
- <section class="content">
-  <h2>Interested in this topic? Start here:</h2>
-  <ul>
-    <li><a href="https://doi.org/10.1016/j.tics.2015.08.008" target="_blank" rel="noopener">Clarke, Alex, and Lorraine K. Tyler. “Understanding What We See: How We Derive Meaning From Vision.” Trends in Cognitive Sciences 19, no. 11 (2015)</a></li>
-    <li><a href="https://yalebooks.yale.edu/2023/02/13/interaction-of-color-60-years-on/" target="_blank" rel="noopener">Danilowitz, Brenda, and Amy Jean Porter. “Interaction of Color—60 Years On.” Yale University Press Blog, February 13, 2023.</a></li>
-    <li><a href="https://people.csail.mit.edu/lavanya/PDF/landy07_news_and_views.pdf" target="_blank" rel="noopener">Landy, Michael S. “Visual Perception: Estimation of Surface Gloss.” Nature 447, no. 7141 (2007): 158–159.</a></li>
-    <li><a href="https://en.wikisource.org/wiki/Leaves_of_Grass_(1855)/I_celebrate_myself" target="_blank" rel="noopener">Whitman, Walt. “Song of Myself.” In Leaves of Grass. 1855.</a></li>
-  </ul>
 
-  <h2>Send us your green</h2>
-  <p class="submit">
-    Found a green in your own life? We’d love to add it to the dictionary — send a photo and where you took it to
-    <a href="mailto:jiny203@newschool.edu?subject=My%20green">jiny203@newschool.edu</a>.
-  </p>
-</section>
+<main id="main" tabindex="0">
+
+  <section class="page">
+    <p class="say">A neuroscience review of how the brain turns what the eyes see into meaning, the way a patch of green becomes a leaf.<sup>[1]</sup></p>
+    <div class="foot"><span class="n">1/5</span>
+      <a href="https://doi.org/10.1016/j.tics.2015.08.008" target="_blank" rel="noopener">Clarke, Alex, and Lorraine K. Tyler. “Understanding What We See: How We Derive Meaning From Vision.” Trends in Cognitive Sciences 19, no. 11 (2015)</a></div>
+  </section>
+
+  <section class="page">
+    <p class="say">Sixty years on, why a color never stays the same: every color changes depending on the colors around it.<sup>[2]</sup></p>
+    <div class="foot"><span class="n">2/5</span>
+      <a href="https://yalebooks.yale.edu/2023/02/13/interaction-of-color-60-years-on/" target="_blank" rel="noopener">Danilowitz, Brenda, and Amy Jean Porter. “Interaction of Color—60 Years On.” Yale University Press Blog, February 13, 2023.</a></div>
+  </section>
+
+  <section class="page">
+    <p class="say">A short commentary on how we tell a shiny surface from a matte one, and why the same green can look glossy or dull.<sup>[3]</sup></p>
+    <div class="foot"><span class="n">3/5</span>
+      <a href="https://people.csail.mit.edu/lavanya/PDF/landy07_news_and_views.pdf" target="_blank" rel="noopener">Landy, Michael S. “Visual Perception: Estimation of Surface Gloss.” Nature 447, no. 7141 (2007): 158–159.</a></div>
+  </section>
+
+  <section class="page">
+    <p class="say">A poem where a child asks, “What is the grass?”, and a whole way of seeing begins.<sup>[4]</sup></p>
+    <div class="foot"><span class="n">4/5</span>
+      <a href="https://en.wikisource.org/wiki/Leaves_of_Grass_(1855)/I_celebrate_myself" target="_blank" rel="noopener">Whitman, Walt. “Song of Myself.” In Leaves of Grass. 1855.</a></div>
+  </section>
+
+  <section class="page">
+    <p class="say">Found a green in your own life? Send us a photo and where you took it.<sup>[5]</sup></p>
+    <div class="foot"><span class="n">5/5</span>
+      <a href="mailto:jiny203@newschool.edu?subject=My%20green">jiny203@newschool.edu</a></div>
+  </section>
+
+</main>
+
+<div class="arrows" aria-label="Pages">
+  <button id="up" type="button" aria-label="Previous page">↑</button>
+  <button id="down" type="button" aria-label="Next page">↓</button>
+</div>
+
+<script>
+  const main = document.getElementById('main');
+  const up = document.getElementById('up'), down = document.getElementById('down');
+  const count = main.querySelectorAll('.page').length;
+  const cur = () => Math.round(main.scrollTop / main.clientHeight);
+  const go = i => main.scrollTo({ top: Math.max(0, Math.min(count - 1, i)) * main.clientHeight });
+  function sync() { const i = cur(); up.disabled = i <= 0; down.disabled = i >= count - 1; }
+
+  up.onclick   = () => go(cur() - 1);
+  down.onclick = () => go(cur() + 1);
+  main.addEventListener('scroll', sync, { passive:true });
+  addEventListener('resize', sync);
+  addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); go(cur() + 1); }
+    if (e.key === 'ArrowUp'   || e.key === 'PageUp')   { e.preventDefault(); go(cur() - 1); }
+  });
+  main.focus({ preventScroll:true });
+  sync();
+</script>
 </body>
 </html>
