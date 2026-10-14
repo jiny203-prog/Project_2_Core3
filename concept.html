@@ -17,7 +17,7 @@
   nav a { color:var(--ink); text-decoration:none; transition:color .2s; }
   nav a:hover { color:var(--g); }
 
-  .hero { position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding-top:8vh; }
+  .hero { position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding-top:0; overflow:hidden; }
   #big { display:inline-block; margin:0; line-height:.8; white-space:nowrap; color:#2fa84f; }
 
   .content { position:relative; z-index:1; max-width:960px; padding:6vh 6vw 14vh; }
@@ -64,7 +64,8 @@
   function fit() {
     big.style.fontSize = '100px';
     const r = big.getBoundingClientRect();
-    const k = Math.min((innerWidth * 0.94) / r.width, (innerHeight * 0.78) / r.height);
+    const w = document.documentElement.clientWidth;
+    const k = Math.min(w / r.width, innerHeight / r.height);   // 左右撑满屏幕
     big.style.fontSize = (100 * k) + 'px';
   }
   fit();
