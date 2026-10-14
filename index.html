@@ -56,7 +56,6 @@
   <div class="track" id="track"></div>
 
   <footer class="school">
-    <div class="arrows"><button id="prev" aria-label="Previous">←</button><button id="next" aria-label="Next">→</button></div>
   </footer>
 </div>
 
@@ -102,8 +101,6 @@
   track.addEventListener('click', e => { if (moved) { e.preventDefault(); moved = false; } }, true);   // 拖动时不触发跳转
 
   /* 左右箭头 */
-  document.getElementById('prev').onclick = () => track.scrollBy({ left: -track.clientWidth * .5, behavior:'smooth' });
-  document.getElementById('next').onclick = () => track.scrollBy({ left:  track.clientWidth * .5, behavior:'smooth' });
 
   /* 一开始让第 6 张在正中间 */
   const c0 = cards[5] || cards[0];
