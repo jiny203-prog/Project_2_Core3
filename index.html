@@ -25,7 +25,7 @@
   h1 { margin:9vh 6vw 0; font-size:clamp(36px, 6vw, 92px); line-height:1.05; }
 
   /* 可拖动的一排卡片 */
-  .track { position:relative; display:flex; align-items:flex-end; margin-top:3vh; padding:5vh 6vw; overflow-x:auto; scrollbar-width:none; cursor:grab; }
+  .track { position:relative; display:flex; align-items:flex-end; margin-top:auto; padding:5vh 6vw 2vh; overflow-x:auto; scrollbar-width:none; cursor:grab; }
   .track::-webkit-scrollbar { display:none; }
   .track.grabbing { cursor:grabbing; }
 
@@ -35,8 +35,8 @@
     box-shadow:0 6px 14px rgba(0,0,0,.12); user-select:none; -webkit-user-drag:none;
     transform:rotate(var(--r)); transform-origin:50% 100%; transition:transform .35s cubic-bezier(.2,.8,.2,1);
   }
-  .card:hover  { z-index:4; }
-  .card.active { z-index:5; }
+  .card:hover  { transform:translateY(-1.5vh) rotate(var(--r)); z-index:4; }
+  .card.active { transform:translateY(-3vh) rotate(var(--r)); z-index:5; }
 
   footer { margin-top:auto; padding:0 6vw 5vh; display:flex; justify-content:flex-end; align-items:center; font-size:clamp(16px, 1.5vw, 22px); }
   .arrows button { background:none; border:0; font:200 clamp(28px, 3vw, 44px) system-ui; color:var(--ink); cursor:pointer; padding:0 .4em; }
@@ -55,8 +55,6 @@
 
   <div class="track" id="track"></div>
 
-  <footer class="school">
-  </footer>
 </div>
 
 <script src="data.js"></script>
