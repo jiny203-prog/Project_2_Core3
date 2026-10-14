@@ -12,7 +12,8 @@
   .photo { position:relative; flex:0 0 51.4%; background-size:cover; background-position:center;
   cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cpath d='M3 9l10-4 10 4 10-4v22l-10 4-10-4-10 4z' fill='white' stroke='black' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M13 5v22M23 9v22' stroke='black' stroke-width='2'/%3E%3Ccircle cx='18' cy='16' r='3.5' fill='%232fa84f' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E") 18 18, pointer; }
   .color { position:relative; flex:1; }
-  .hex { position:absolute; right:1.8vw; bottom:1.5vh; font-family:"Sarala", sans-serif; font-size:5vw; line-height:1; color:#000; pointer-events:none; }
+  .hex { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-family:"Sarala", sans-serif; font-size:clamp(40px,7vw,120px); line-height:1; color:#000; white-space:nowrap; opacity:0; transition:opacity .25s; pointer-events:none; }
+  .color:hover .hex { opacity:1; }
   .back { position:fixed; left:24px; top:20px; z-index:5; font-family:"Sarala", sans-serif; font-weight:400; font-size:clamp(18px,1.9vw,26px); color:#fff; text-decoration:none; opacity:.85; text-shadow:0 1px 4px rgba(0,0,0,.45); }
   .back:hover { opacity:1; }
   .overlay { position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10; }
@@ -33,8 +34,8 @@
 <body>
 <a class="back" href="index.html">Back</a>
 <div class="page">
-  <div class="photo" id="photo"><div class="hex" id="hex"></div></div>
-  <div class="color" id="color"></div>
+  <div class="photo" id="photo"></div>
+  <div class="color" id="color"><div class="hex" id="hex"></div></div>
 </div>
 
 <div class="overlay" id="overlay">
