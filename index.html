@@ -33,10 +33,10 @@
     position:relative; flex:0 0 var(--cw); height:calc(var(--cw) * 2.1); margin-right:calc(var(--cw) * -.06);
     padding:14px 16px; font-family:"Sarala", sans-serif; font-size:20px; text-decoration:none;
     box-shadow:0 6px 14px rgba(0,0,0,.12); user-select:none; -webkit-user-drag:none;
-    transform:translateY(var(--y)) rotate(var(--r)); transition:transform .35s cubic-bezier(.2,.8,.2,1);
+    transform:rotate(var(--r)); transition:transform .35s cubic-bezier(.2,.8,.2,1);
   }
-  .card:hover  { transform:translateY(calc(var(--y) - 1.5vh)) rotate(var(--r)); z-index:4; }
-  .card.active { transform:translateY(-3vh) rotate(var(--r)); z-index:5; }
+  .card:hover  { z-index:4; }
+  .card.active { z-index:5; }
 
   footer { margin-top:auto; padding:0 6vw 5vh; display:flex; justify-content:flex-end; align-items:center; font-size:clamp(16px, 1.5vw, 22px); }
   .arrows button { background:none; border:0; font:200 clamp(28px, 3vw, 44px) system-ui; color:var(--ink); cursor:pointer; padding:0 .4em; }
@@ -77,7 +77,6 @@
     a.style.background = it.color;
     a.style.color = lum(it.color) < .45 ? '#fff' : '#111';
     a.style.setProperty('--r', ((rnd(i) - .5) * 3).toFixed(2) + 'deg');
-    a.style.setProperty('--y', (rnd(i + 50) * 14).toFixed(0) + 'px');
     a.textContent = String(i + 1).padStart(2, '0');
     track.appendChild(a);
     return a;
