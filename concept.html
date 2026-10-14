@@ -21,17 +21,6 @@
   #big { position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
   #cv { position:absolute; inset:0; width:100%; height:100%; display:block; }
 
-  .content { position:relative; z-index:1; max-width:960px; padding:6vh 6vw 14vh; }
-  .lead { margin:0 0 9vh; font-size:clamp(26px, 3.6vw, 52px); line-height:1.25; }
-  .lead b { font-weight:400; color:var(--g); }
-  h2 { margin:0 0 .9em; font-weight:400; font-size:clamp(18px, 1.8vw, 26px); color:var(--g); }
-  ul { list-style:none; margin:0 0 9vh; padding:0; }
-  li { margin-bottom:.7em; }
-  li a { color:var(--ink); font-size:clamp(20px, 2.1vw, 30px); text-decoration:none; border-bottom:2px solid var(--ink); transition:color .2s, border-color .2s; }
-  li a::after { content:' ↗'; }
-  li a:hover { color:var(--g); border-color:var(--g); }
-  .submit { margin:0; font-size:clamp(20px, 2.1vw, 30px); line-height:1.4; }
-  .submit a { color:var(--g); text-decoration:none; border-bottom:2px solid var(--g); }
 </style>
 <link rel="icon" type="image/png" href="favicon.png">
 </head>
@@ -43,22 +32,6 @@
 <section class="hero">
   <h1 id="big" class="rock">GREEN</h1>
   <canvas id="cv" aria-hidden="true"></canvas>
-</section>
-
- <section class="content">
-  <h2>Interested in this topic? Start here:</h2>
-  <ul>
-    <li><a href="https://doi.org/10.1016/j.tics.2015.08.008" target="_blank" rel="noopener">Clarke, Alex, and Lorraine K. Tyler. “Understanding What We See: How We Derive Meaning From Vision.” Trends in Cognitive Sciences 19, no. 11 (2015)</a></li>
-    <li><a href="https://yalebooks.yale.edu/2023/02/13/interaction-of-color-60-years-on/" target="_blank" rel="noopener">Danilowitz, Brenda, and Amy Jean Porter. “Interaction of Color—60 Years On.” Yale University Press Blog, February 13, 2023.</a></li>
-    <li><a href="https://people.csail.mit.edu/lavanya/PDF/landy07_news_and_views.pdf" target="_blank" rel="noopener">Landy, Michael S. “Visual Perception: Estimation of Surface Gloss.” Nature 447, no. 7141 (2007): 158–159.</a></li>
-    <li><a href="https://en.wikisource.org/wiki/Leaves_of_Grass_(1855)/I_celebrate_myself" target="_blank" rel="noopener">Whitman, Walt. “Song of Myself.” In Leaves of Grass. 1855.</a></li>
-  </ul>
-
-  <h2>Send us your green</h2>
-  <p class="submit">
-    Found a green in your own life? We’d love to add it to the dictionary — send a photo and where you took it to
-    <a href="mailto:jiny203@newschool.edu?subject=My%20green">jiny203@newschool.edu</a>.
-  </p>
 </section>
 
 <script>
