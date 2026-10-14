@@ -8,7 +8,9 @@
    <link href="https://fonts.googleapis.com/css2?family=Aleo:wght@300;400;700&family=Sarala:wght@400;700&display=swap" rel="stylesheet">
 <style>
   html, body { margin:0; height:100%; background:#000; font-family:"Sarala", sans-serif; font-weight:400; font-style:normal; overflow:hidden; }
-  .page { display:flex; height:100vh; }
+  main { height:100vh; height:100svh; overflow-y:auto; scroll-snap-type:y mandatory; scroll-behavior:smooth; scrollbar-width:none; outline:none; }
+  main::-webkit-scrollbar { display:none; }
+  .page { display:flex; height:100vh; height:100svh; scroll-snap-align:start; scroll-snap-stop:always; }
   .photo { position:relative; flex:0 0 51.4%; background-size:cover; background-position:center;
   cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cpath d='M3 9l10-4 10 4 10-4v22l-10 4-10-4-10 4z' fill='white' stroke='black' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M13 5v22M23 9v22' stroke='black' stroke-width='2'/%3E%3Ccircle cx='18' cy='16' r='3.5' fill='%232fa84f' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E") 18 18, pointer; }
   .color { position:relative; flex:1; }
@@ -29,55 +31,107 @@
 
   .cap { position:absolute; left:0; top:calc(100% + 10px); color:#fff; font-size:18px; text-shadow:0 1px 3px rgba(0,0,0,.5); }
   .cap a { color:#fff; margin-left:8px; text-decoration:none; border-bottom:1px solid #fff; }
+
+  .arrows { position:fixed; right:3vw; top:50%; transform:translateY(-50%); z-index:5; display:flex; flex-direction:column; gap:1.2vh; }
+  .arrows button { background:none; border:0; padding:.1em .4em; font:400 clamp(30px,3vw,46px) "Sarala", sans-serif; color:#000; cursor:pointer; transition:opacity .2s; }
+  .arrows button:hover:not(:disabled) { opacity:.6; }
+  .arrows button:disabled { opacity:.2; cursor:default; }
+  .arrows button:focus-visible { outline:2px solid currentColor; outline-offset:2px; }
+  @media (prefers-reduced-motion: reduce) { main { scroll-behavior:auto; } }
 </style>
 </head>
 <body>
 <a class="back" href="index.html">Back</a>
-<div class="page">
-  <div class="photo" id="photo"></div>
-  <div class="color" id="color"><div class="hex" id="hex"></div></div>
+
+<main id="main" tabindex="0"></main>
+
+<div class="arrows" aria-label="Colours">
+  <button id="up" type="button" aria-label="Previous colour">↑</button>
+  <button id="down" type="button" aria-label="Next colour">↓</button>
 </div>
 
 <div class="overlay" id="overlay">
-  <div class="map" id="map">
-    <a class="pin" id="pin" target="_blank" rel="noopener"></a>
-    <div class="cap" id="cap"></div>
-  </div>
+  <div class="map" id="map"></div>
 </div>
 
 <script src="data.js"></script>
 <script>
-  const id = Math.min(Math.max(parseInt(new URLSearchParams(location.search).get('id')) || 0, 0), ITEMS.length - 1);
-  const item = ITEMS[id];
-
-  const photo = document.getElementById('photo');
-  photo.style.backgroundImage = `url(${item.photo})`;
-  document.getElementById('color').style.backgroundColor = item.color;
-  const hex = document.getElementById('hex');
-  hex.textContent = item.color.toUpperCase();
+  const main = document.getElementById('main');
+  const up = document.getElementById('up'), down = document.getElementById('down');
   const overlay = document.getElementById('overlay');
   const map = document.getElementById('map');
-  const pin = document.getElementById('pin');
-  const cap = document.getElementById('cap');
-  pin.style.backgroundImage = `url(${item.photo})`;
+  const lum = hex => { const v = [1,3,5].map(i => parseInt(hex.substr(i, 2), 16) / 255); return .2126*v[0] + .7152*v[1] + .0722*v[2]; };
 
-  if (item.lat != null && item.lng != null) {
-    const q = `${item.lat},${item.lng}`;
-    const ns = item.lat >= 0 ? 'N' : 'S', ew = item.lng >= 0 ? 'E' : 'W';
-    const iframe = document.createElement('iframe');
-    iframe.src = `https://www.google.com/maps?q=${q}&z=17&output=embed`;
-    map.prepend(iframe);
-    pin.href = `https://www.google.com/maps?q=${q}`;
-    cap.innerHTML = `${item.place ? item.place + ' · ' : ''}${Math.abs(item.lat).toFixed(5)}° ${ns}, ${Math.abs(item.lng).toFixed(5)}° ${ew}
-                     <a href="${pin.href}" target="_blank" rel="noopener">Open in Google Maps ↗</a>`;
-  } else {
-    pin.style.display = 'none';
-    map.prepend(Object.assign(document.createElement('div'), { className:'empty', textContent:'Location not set yet' }));
+  /* 每个色块是一整页：左边照片，右边色块，鼠标放上去显示色号 */
+  const photos = ITEMS.map((it, i) => {
+    const page = document.createElement('section');
+    page.className = 'page';
+    page.innerHTML = '<div class="photo"></div><div class="color"><div class="hex"></div></div>';
+    page.querySelector('.color').style.backgroundColor = it.color;
+    page.querySelector('.hex').textContent = it.color.toUpperCase();
+    const ph = page.querySelector('.photo');
+    ph.addEventListener('click', () => openMap(i));
+    main.appendChild(page);
+    return ph;
+  });
+  const loaded = new Set();
+  function load(i) { if (i < 0 || i >= photos.length || loaded.has(i)) return; loaded.add(i); photos[i].style.backgroundImage = `url(${ITEMS[i].photo})`; }
+
+  const cur = () => Math.max(0, Math.min(ITEMS.length - 1, Math.round(main.scrollTop / main.clientHeight)));
+  const go = i => main.scrollTo({ top: Math.max(0, Math.min(ITEMS.length - 1, i)) * main.clientHeight });
+
+  function sync() {
+    const i = cur();
+    load(i - 1); load(i); load(i + 1);
+    up.disabled = i <= 0; down.disabled = i >= ITEMS.length - 1;
+    const ink = lum(ITEMS[i].color) < .45 ? '#fff' : '#000';
+    up.style.color = down.style.color = ink;
+    try { history.replaceState(null, '', '?id=' + i); } catch (e) {}
   }
 
-  photo.addEventListener('click', () => overlay.classList.add('open'));
+  up.onclick   = () => go(cur() - 1);
+  down.onclick = () => go(cur() + 1);
+  main.addEventListener('scroll', sync, { passive:true });
+  addEventListener('resize', () => { main.style.scrollBehavior = 'auto'; go(cur()); main.style.scrollBehavior = ''; sync(); });
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape') overlay.classList.remove('open');
+    if (overlay.classList.contains('open')) return;
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); go(cur() + 1); }
+    if (e.key === 'ArrowUp'   || e.key === 'PageUp')   { e.preventDefault(); go(cur() - 1); }
+  });
+
+  /* 一开始跳到网址里 ?id= 指定的那一页 */
+  const start = Math.min(Math.max(parseInt(new URLSearchParams(location.search).get('id')) || 0, 0), ITEMS.length - 1);
+  main.style.scrollBehavior = 'auto';
+  main.scrollTop = start * main.clientHeight;
+  main.style.scrollBehavior = '';
+  sync();
+  main.focus({ preventScroll:true });
+
+  /* 地图弹窗：点照片，显示这张照片拍摄的地方 */
+  function openMap(i) {
+    const item = ITEMS[i];
+    map.innerHTML = '';
+    if (item.lat != null && item.lng != null) {
+      const q = `${item.lat},${item.lng}`;
+      const ns = item.lat >= 0 ? 'N' : 'S', ew = item.lng >= 0 ? 'E' : 'W';
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.google.com/maps?q=${q}&z=17&output=embed`;
+      const pin = document.createElement('a');
+      pin.className = 'pin'; pin.target = '_blank'; pin.rel = 'noopener';
+      pin.href = `https://www.google.com/maps?q=${q}`;
+      pin.style.backgroundImage = `url(${item.photo})`;
+      const cap = document.createElement('div');
+      cap.className = 'cap';
+      cap.innerHTML = `${item.place ? item.place + ' · ' : ''}${Math.abs(item.lat).toFixed(5)}° ${ns}, ${Math.abs(item.lng).toFixed(5)}° ${ew}
+                       <a href="${pin.href}" target="_blank" rel="noopener">Open in Google Maps ↗</a>`;
+      map.append(iframe, pin, cap);
+    } else {
+      map.append(Object.assign(document.createElement('div'), { className:'empty', textContent:'Location not set yet' }));
+    }
+    overlay.classList.add('open');
+  }
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
-  addEventListener('keydown', e => { if (e.key === 'Escape') overlay.classList.remove('open'); });
 </script>
 </body>
 </html>
