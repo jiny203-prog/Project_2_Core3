@@ -88,8 +88,6 @@
     cards.forEach(c => { const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (d < bd) { bd = d; best = c; } });
     cards.forEach(c => c.classList.toggle('active', c === best));
   }
-  track.addEventListener('scroll', mark, { passive:true });
-  addEventListener('resize', mark);
 
   /* 鼠标拖动（触屏直接用手指滑动） */
   let down = false, moved = false, sx = 0, sl = 0;
@@ -103,7 +101,8 @@
   /* 一开始让第 6 张在正中间 */
   const c0 = cards[5] || cards[0];
   track.scrollLeft = c0.offsetLeft - (track.clientWidth - c0.offsetWidth) / 2;
-  mark();
+  // 刚打开时不抬起任何一张；用户开始拖动/滚动后，才抬起经过中间的那张
+  setTimeout(() => track.addEventListener('scroll', mark, { passive:true }), 300);
 </script>
 </body>
 </html>
