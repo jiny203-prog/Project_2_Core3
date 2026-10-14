@@ -6,12 +6,14 @@
 <title>Concept · A Dictionary Of Green</title>
 <link href="https://fonts.googleapis.com/css2?family=Rock+3D&family=Sarala:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#111; --g:#1f7a4d; }
+  :root { --ink:#111; --g:#1f7a4d; --edge:4vw; }
   * { box-sizing:border-box; }
   html, body { margin:0; background:#F5F1E8; color:var(--ink); font-family:"Sarala", sans-serif; font-weight:400; font-style:normal; }
 
   .rock { font-family:"Rock 3D", system-ui; font-weight:400; font-style:normal; }
-  header { position:absolute; top:0; left:0; right:0; z-index:2; display:flex; justify-content:flex-end; align-items:center; padding:5vh 6vw 0; }
+  header { position:absolute; top:0; left:0; right:0; z-index:2; display:flex; justify-content:space-between; align-items:baseline; padding:var(--edge) var(--edge) 0; line-height:1; }
+  .back { color:var(--ink); text-decoration:none; font-size:clamp(17px, 1.6vw, 24px); transition:color .2s; }
+  .back:hover { color:var(--g); }
   .brand { color:var(--ink); text-decoration:none; font-size:clamp(20px, 2.2vw, 32px); }
   nav { display:flex; gap:3vw; font-size:clamp(17px, 1.6vw, 24px); }
   nav a { color:var(--ink); text-decoration:none; transition:color .2s; }
@@ -26,6 +28,7 @@
 </head>
 <body>
 <header>
+  <a class="back" href="index.html">Back</a>
   <nav><a href="index.html">Home</a><a href="game.html">Game</a><a href="sources.html">Sources</a></nav>
 </header>
 

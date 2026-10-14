@@ -6,11 +6,11 @@
 <title>Sources · A Dictionary Of Green</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarala:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#111; --g:#1f7a4d; }
+  :root { --ink:#111; --g:#1f7a4d; --edge:4vw; }   /* 上、下、左、右的边距都用这一个值 */
   * { box-sizing:border-box; }
   html, body { margin:0; height:100%; background:#F5F1E8; color:var(--ink); font-family:"Sarala", sans-serif; font-weight:400; font-style:normal; overflow:hidden; }
 
-  header { position:fixed; top:0; left:0; right:0; z-index:5; display:flex; justify-content:space-between; align-items:baseline; padding:5vh 6vw 0; pointer-events:none; }
+  header { position:fixed; top:0; left:0; right:0; z-index:5; display:flex; justify-content:space-between; align-items:baseline; padding:var(--edge) var(--edge) 0; line-height:1; pointer-events:none; }
   .back { color:var(--ink); text-decoration:none; font-size:clamp(17px, 1.6vw, 24px); pointer-events:auto; transition:color .2s; }
   .back:hover { color:var(--g); }
   nav { display:flex; gap:3vw; font-size:clamp(17px, 1.6vw, 24px); pointer-events:auto; }
@@ -20,26 +20,26 @@
   /* 每一页占满一屏，上下切换 */
   main { height:100vh; height:100svh; overflow-y:auto; scroll-snap-type:y mandatory; scroll-behavior:smooth; scrollbar-width:none; outline:none; }
   main::-webkit-scrollbar { display:none; }
-  .page { position:relative; height:100vh; height:100svh; scroll-snap-align:start; scroll-snap-stop:always; display:flex; flex-direction:column; justify-content:center; padding:14vh 13vw 12vh 6vw; }
+  .page { position:relative; height:100vh; height:100svh; scroll-snap-align:start; scroll-snap-stop:always; display:flex; flex-direction:column; justify-content:center; padding:14vh 13vw 12vh var(--edge); }
 
   .say { margin:0; max-width:19em; font-size:clamp(30px, 5vw, 80px); line-height:1.08; letter-spacing:-.01em; }
   .say sup { font-size:.22em; letter-spacing:0; vertical-align:super; margin-left:.3em; color:var(--g); }
 
   /* 最下方：页码 + link */
-  .foot { position:absolute; left:6vw; right:6vw; bottom:4.5vh; display:flex; gap:3vw; align-items:baseline; font-size:clamp(13px, 1.05vw, 16px); line-height:1.4; }
+  .foot { position:absolute; left:var(--edge); right:var(--edge); bottom:var(--edge); display:flex; gap:3vw; align-items:baseline; font-size:clamp(13px, 1.05vw, 16px); line-height:1; }
   .foot .n { flex:0 0 auto; color:var(--g); font-variant-numeric:tabular-nums; }
   .foot a { color:var(--ink); text-decoration:none; border-bottom:1px solid transparent; transition:color .2s, border-color .2s; }
   .foot a:hover { color:var(--g); border-color:var(--g); }
 
   /* 上下箭头 */
-  .arrows { position:fixed; right:6vw; top:50%; transform:translateY(-50%); z-index:5; display:flex; flex-direction:column; gap:1.2vh; }
+  .arrows { position:fixed; right:var(--edge); top:50%; transform:translateY(-50%); z-index:5; display:flex; flex-direction:column; gap:1.2vh; }
   .arrows button { background:none; border:0; padding:.1em .4em; font:400 clamp(30px, 3vw, 46px) "Sarala", sans-serif; color:var(--ink); cursor:pointer; transition:color .2s, opacity .2s; }
   .arrows button:hover:not(:disabled) { color:var(--g); }
   .arrows button:disabled { opacity:.2; cursor:default; }
   .arrows button:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
 
   @media (prefers-reduced-motion: reduce) { main { scroll-behavior:auto; } }
-  @media (max-width:640px) { .arrows { right:3vw; } .say { max-width:none; } }
+  @media (max-width:640px) { .arrows { right:2vw; } .say { max-width:none; } }
 </style>
 <link rel="icon" type="image/png" href="favicon.png">
 </head>
