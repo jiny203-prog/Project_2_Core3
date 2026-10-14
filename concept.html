@@ -17,8 +17,9 @@
   nav a { color:var(--ink); text-decoration:none; transition:color .2s; }
   nav a:hover { color:var(--g); }
 
-  .hero { position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding-top:0; overflow:hidden; }
-  #big { display:inline-block; margin:0; line-height:.8; white-space:nowrap; color:#2fa84f; }
+  .hero { position:relative; z-index:1; height:100vh; height:100svh; overflow:hidden; }
+  #big { position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  #cv { position:absolute; inset:0; width:100%; height:100%; display:block; }
 
   .content { position:relative; z-index:1; max-width:960px; padding:6vh 6vw 14vh; }
   .lead { margin:0 0 9vh; font-size:clamp(26px, 3.6vw, 52px); line-height:1.25; }
@@ -41,6 +42,7 @@
 
 <section class="hero">
   <h1 id="big" class="rock">GREEN</h1>
+  <canvas id="cv" aria-hidden="true"></canvas>
 </section>
 
  <section class="content">
@@ -60,17 +62,27 @@
 </section>
 
 <script>
-  const big = document.getElementById('big');
-  function fit() {
-    big.style.fontSize = '100px';
-    const r = big.getBoundingClientRect();
-    const w = document.documentElement.clientWidth;
-    const k = Math.min(w / r.width, innerHeight / r.height);   // 左右撑满屏幕
-    big.style.fontSize = (100 * k) + 'px';
+  /* GREEN 上下左右都铺满屏幕：用 canvas 量出字母的真实边界，再拉伸到整个屏幕 */
+  const cv = document.getElementById('cv');
+  function draw() {
+    const W = cv.clientWidth, H = cv.clientHeight, dpr = window.devicePixelRatio || 1;
+    cv.width = W * dpr; cv.height = H * dpr;
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.font = '400 200px "Rock 3D", system-ui';
+    ctx.textBaseline = 'alphabetic';
+    const m = ctx.measureText('GREEN');
+    const left = m.actualBoundingBoxLeft, right = m.actualBoundingBoxRight;
+    const asc = m.actualBoundingBoxAscent, desc = m.actualBoundingBoxDescent;
+    const sx = W / (left + right), sy = H / (asc + desc);
+    ctx.fillStyle = '#2fa84f';
+    ctx.setTransform(dpr * sx, 0, 0, dpr * sy, 0, 0);
+    ctx.fillText('GREEN', left, asc);
   }
-  fit();
-  addEventListener('resize', fit);
-  if (document.fonts) document.fonts.ready.then(fit);   
+  draw();
+  addEventListener('resize', draw);
+  if (document.fonts) document.fonts.load('200px "Rock 3D"').then(draw);
 </script>
 </body>
 </html>
